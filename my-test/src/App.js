@@ -21,12 +21,19 @@ export default function Board() { // export can be used in other files if import
     // shared children state
     const [squares, setSquares] = useState(Array(9).fill(null)); // squares = Array(9).fill(null) initially 
     const [xIsNext, setXIsNext] = useState(true);
+
+
   function handleClick(i) {
-    const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
-    if (nextSquares[i]){
+   
+    if (squares[i] || calculateWinner(squares)){
         return; //already filled with X or O <- I suddently realize react components are just functions 
         // to be "reapeately called" at runtime!?
     }
+
+
+
+
+    const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
     if (xIsNext) {
         nextSquares[i]="X"
     }else{
@@ -41,15 +48,25 @@ export default function Board() { // export can be used in other files if import
     //< Square value={squares[0]} onSquareClick={handleClick(0)}  /> 
     // handleClick : pass as prop;  handleClick(0) : calling function (before clicks)
     // solution: onSquareClick={() => handleClick(0)}
+
+    let gstatus;
+    const winner = calculateWinner(squares);
+   
+    if (winner) {
+            gstatus = "Winner: " + winner;
+        } else {
+            gstatus = "Next player: " + (xIsNext ? "X" : "O");
+        }
+  
     return (
     <>
+    <div className="status">{gstatus}</div>
     <div className='board-row'>
         < Square value={squares[0]} onSquareClick={()=> {handleClick(0)}}  /> 
         < Square value={squares[1]} onSquareClick={()=> {handleClick(1)}} />
         < Square value={squares[2]} onSquareClick={()=> {handleClick(2)}} />
 
     </div>
-
         <div className='board-row'>
         < Square value={squares[3]} onSquareClick={()=> {handleClick(3)}} />
         < Square value={squares[4]} onSquareClick={()=> {handleClick(4)}} />
@@ -62,4 +79,27 @@ export default function Board() { // export can be used in other files if import
     </div>
     </>
     );
+}
+
+
+
+/////// copy - and - pasted helper :
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 }
