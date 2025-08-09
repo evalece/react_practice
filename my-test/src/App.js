@@ -9,7 +9,7 @@ function Square({value, onSquareClick}) {
  return <button className="square" onClick={onSquareClick}> 
     {value} 
     </button>
-  
+  // child: hooks parent callback in JSX
 }
 
 
@@ -20,11 +20,21 @@ export default function Board() { // export can be used in other files if import
     
     // shared children state
     const [squares, setSquares] = useState(Array(9).fill(null)); // squares = Array(9).fill(null) initially 
-    
+    const [xIsNext, setXIsNext] = useState(true);
   function handleClick(i) {
-    const nextSquares = squares.slice();
-    nextSquares[i] = "X";
+    const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
+    if (nextSquares[i]){
+        return; //already filled with X or O <- I suddently realize react components are just functions 
+        // to be "reapeately called" at runtime!?
+    }
+    if (xIsNext) {
+        nextSquares[i]="X"
+    }else{
+        nextSquares[i]="O"
+    }
+    
     setSquares(nextSquares);
+    setXIsNext(!xIsNext); //switch terms
   }
 
     // variable passing using { } with JXS 
