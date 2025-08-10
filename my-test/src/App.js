@@ -15,22 +15,19 @@ function Square({value, onSquareClick}) {
 
 
 
-export default function Board() { // export can be used in other files if import; default: if not renamed, if without
+ function Board({xIsNext, squares, onPlay}) { // export can be used in other files if import; default: if not renamed, if without
     // defualt, then Named export => no name changing unless import {x as y} from z
     
     // shared children state
-    const [squares, setSquares] = useState(Array(9).fill(null)); // squares = Array(9).fill(null) initially 
-    const [xIsNext, setXIsNext] = useState(true);
+    
 
 
   function handleClick(i) {
    
     if (squares[i] || calculateWinner(squares)){
         return; //already filled with X or O <- I suddently realize react components are just functions 
-        // to be "reapeately called" at runtime!?
+
     }
-
-
 
 
     const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
@@ -40,8 +37,10 @@ export default function Board() { // export can be used in other files if import
         nextSquares[i]="O"
     }
     
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext); //switch terms
+    onPlay(nextSquares) //calling Game function, replaced the following
+  
+    // setSquares(nextSquares);
+    // setXIsNext(!xIsNext); //switch terms
   }
 
     // variable passing using { } with JXS 
@@ -81,6 +80,38 @@ export default function Board() { // export can be used in other files if import
     );
 }
 
+
+export default function Game(){ //store board history and render current board to allow player actions during play game
+    const [xIsNext, setXIsNext]= useState(true);
+    const [history, setHistory]= useState([Array(9).fill(null)]);
+    const currentSquare= history[history.length -1]; //get last state of board
+
+    function handlePlay(nextSquares){ 
+        setHistory([...history, nextSquares]); // history+= nextSquares
+        setXIsNext(!xIsNext);
+
+    }
+    
+    return(
+        <div className ="game">
+            <div className= "game-board">
+
+            </div>
+            /* use child in parent funcion 
+            handlePlay: allow child to use parent's callback function within it's context when 
+            user interacts with child 
+            
+            inside parent's handle play: where the actual re-render occures 
+            */
+           <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay}/>  
+        
+
+        <div className='game-info'>
+            <ol>{ }</ol>
+        </div>
+    </div>
+    )
+}
 
 
 /////// copy - and - pasted helper :
