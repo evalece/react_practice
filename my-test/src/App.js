@@ -14,15 +14,15 @@ function Square({value, onSquareClick}) {
 
 
 
-
+    // squares: passing current square
  function Board({xIsNext, squares, onPlay}) { // export can be used in other files if import; default: if not renamed, if without
     // defualt, then Named export => no name changing unless import {x as y} from z
     
-    // shared children state
+
     
 
-
-  function handleClick(i) {
+    // map this function in JXS
+  function handleClick(i) { 
    
     if (squares[i] || calculateWinner(squares)){
         return; //already filled with X or O <- I suddently realize react components are just functions 
@@ -36,8 +36,8 @@ function Square({value, onSquareClick}) {
     }else{
         nextSquares[i]="O"
     }
-    
-    onPlay(nextSquares) //calling Game function, replaced the following
+    //calling Game function, replaced the following
+    onPlay(nextSquares) 
   
     // setSquares(nextSquares);
     // setXIsNext(!xIsNext); //switch terms
@@ -97,12 +97,7 @@ export default function Game(){ //store board history and render current board t
             <div className= "game-board">
 
             </div>
-            /* use child in parent funcion 
-            handlePlay: allow child to use parent's callback function within it's context when 
-            user interacts with child 
-            
-            inside parent's handle play: where the actual re-render occures 
-            */
+      
            <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay}/>  
         
 
