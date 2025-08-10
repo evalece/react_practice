@@ -37,6 +37,8 @@ function Square({value, onSquareClick}) {
         nextSquares[i]="O"
     }
     //calling Game function, replaced the following
+    //**  From where we marked **, it looks like we dupes work, this part is the funciton/ component part
+    // for call chain. We need both 
     onPlay(nextSquares) 
   
     // setSquares(nextSquares);
@@ -84,25 +86,55 @@ function Square({value, onSquareClick}) {
 export default function Game(){ //store board history and render current board to allow player actions during play game
     const [xIsNext, setXIsNext]= useState(true);
     const [history, setHistory]= useState([Array(9).fill(null)]);
-    const currentSquare= history[history.length -1]; //get last state of board
+    // const currentSquare= history[history.length -1]; //get last state of board
+    const [currentMove, setCurrentMove]=useState(0); //currentMove counts number of total moves
 
-    function handlePlay(nextSquares){ 
-        setHistory([...history, nextSquares]); // history+= nextSquares
+    const currentSquare= history[currentMove]; // Allow jump to any chosen history
+    
+    function handlePlay(nextSquares){
+        const nextHistory= [...history.slice(0, currentMove +1),nextSquares]; // history+= nextSquares
+        setHistory(nextHistory); 
+        setCurrentMove(nextHistory.length -1 ) //**** check this
         setXIsNext(!xIsNext);
 
     }
+
+    function jumpTo(nextMove){ //go back to a specific history, then reset current and next move 
+        setCurrentMove(nextMove);
+        setXIsNext(nextMove % 2 === 0);
+
+    }
+
+    const moves = history.map((square,move)=>{
+
+        let description
+        if (move >0){
+            description = 'Go to move # ' + move;
+        }else{
+            description= 'Go to game start';
+        }
+        return ( // list item per history, on each render, react store state info per li 
+            // r either updates or destory old list li keys matchs or not (not-> add component)
+            // for later: check best use case on db <-> r keys
+
+            //we use "move"- the index, to call jumpTo, where we reset play states (terms and maps)
+            <li key= {move}>
+                <button onClick={()=>jumpTo(move)}> {description} </button>
+            </li>
+        );
+    });
     
     return(
         <div className ="game">
             <div className= "game-board">
 
             </div>
-      
+            //note the onPlay here, this is for UI only **
            <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay}/>  
         
 
         <div className='game-info'>
-            <ol>{ }</ol>
+            <ol>{moves}</ol>
         </div>
     </div>
     )
