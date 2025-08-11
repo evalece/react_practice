@@ -1,3 +1,13 @@
+/*
+pass value with pros summary:
+Props = properties (data) passed from parent to child.
+
+Observation- 
+add value properties in functions using {}, this allows value passing with props via JSX 
+in format of < Square val='xxx' > assuming the square function returns a JSX 
+
+React rendering action: board passes value to square, square renders button
+*/
 function Square({ value }) {
   return <button className="square">{value}</button>;
 }
