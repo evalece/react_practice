@@ -24,31 +24,22 @@ function Square({value, onSquareClick}) {
     // map this function in JXS
   function handleClick(i) { 
    
-    if (squares[i] || calculateWinner(squares)){
-        return; //already filled with X or O <- I suddently realize react components are just functions 
+        if (squares[i] || calculateWinner(squares)){
+            return; //already filled with X or O <- I suddently realize react components are just functions 
+        }
 
-    }
+        const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
+        if (xIsNext) {
+            nextSquares[i]="X"
+        }else{
+            nextSquares[i]="O"
+        }
+
+        onPlay(nextSquares) 
+
+    } // handleClick // 
 
 
-    const nextSquares = squares.slice(); //parent re-render from last state's copy with i set to X
-    if (xIsNext) {
-        nextSquares[i]="X"
-    }else{
-        nextSquares[i]="O"
-    }
-    //calling Game function, replaced the following
-    //**  From where we marked **, it looks like we dupes work, this part is the funciton/ component part
-    // for call chain. We need both 
-    onPlay(nextSquares) 
-  
-    // setSquares(nextSquares);
-    // setXIsNext(!xIsNext); //switch terms
-  }
-
-    // variable passing using { } with JXS 
-    //< Square value={squares[0]} onSquareClick={handleClick(0)}  /> 
-    // handleClick : pass as prop;  handleClick(0) : calling function (before clicks)
-    // solution: onSquareClick={() => handleClick(0)}
 
     let gstatus;
     const winner = calculateWinner(squares);
@@ -58,30 +49,37 @@ function Square({value, onSquareClick}) {
         } else {
             gstatus = "Next player: " + (xIsNext ? "X" : "O");
         }
-  
-    return (
-    <>
-    <div className="status">{gstatus}</div>
-    <div className='board-row'>
-        < Square value={squares[0]} onSquareClick={()=> {handleClick(0)}}  /> 
-        < Square value={squares[1]} onSquareClick={()=> {handleClick(1)}} />
-        < Square value={squares[2]} onSquareClick={()=> {handleClick(2)}} />
+    
+    // render UI
+    return(
 
-    </div>
+        <>
+        <div className="status">{gstatus}</div>
         <div className='board-row'>
-        < Square value={squares[3]} onSquareClick={()=> {handleClick(3)}} />
-        < Square value={squares[4]} onSquareClick={()=> {handleClick(4)}} />
-        < Square value={squares[5]} onSquareClick={()=> {handleClick(5)}} />
-    </div>
-    <div className='board-row'>
-        < Square value={squares[6]} onSquareClick={()=> {handleClick(6)}} />
-        < Square value={squares[7]} onSquareClick={()=> {handleClick(7)}} />
-        < Square value={squares[8]} onSquareClick={()=> {handleClick(8)}} />
-    </div>
-    </>
+            < Square value={squares[0]} onSquareClick={()=> {handleClick(0)}}  /> 
+            < Square value={squares[1]} onSquareClick={()=> {handleClick(1)}} />
+            < Square value={squares[2]} onSquareClick={()=> {handleClick(2)}} />
+
+        </div>
+            <div className='board-row'>
+            < Square value={squares[3]} onSquareClick={()=> {handleClick(3)}} />
+            < Square value={squares[4]} onSquareClick={()=> {handleClick(4)}} />
+            < Square value={squares[5]} onSquareClick={()=> {handleClick(5)}} />
+        </div>
+        <div className='board-row'>
+            < Square value={squares[6]} onSquareClick={()=> {handleClick(6)}} />
+            < Square value={squares[7]} onSquareClick={()=> {handleClick(7)}} />
+            < Square value={squares[8]} onSquareClick={()=> {handleClick(8)}} />
+        </div>
+        </>
     );
 }
 
+
+/*
+This gives the Game component full control over the Board’s 
+data and lets it instruct the Board to render previous turns from the history.
+*/
 
 export default function Game(){ //store board history and render current board to allow player actions during play game
     const [xIsNext, setXIsNext]= useState(true);
@@ -129,7 +127,7 @@ export default function Game(){ //store board history and render current board t
             <div className= "game-board">
 
             </div>
-            //note the onPlay here, this is for UI only **
+            
            <Board xIsNext={xIsNext} squares={currentSquare} onPlay={handlePlay}/>  
         
 
