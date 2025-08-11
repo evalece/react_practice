@@ -1,9 +1,8 @@
 /*
-lifting state up:
-observation: avoid visiting each square for state info, store all 9 squares' info in board instead.
-Idea "Lifting State": shared state in parent, parent pass data to children via prop in children communication.
-    -  declare share state in parent, then parent passes state to children
-    - board passes val (X, Null, O) to square
+lifting state up Part 2, event handler with inputs in JSX :
+observation: 
+JSX pattern at 
+onSquareClick={() => handleClick(3)}
 
 after user clicks, we have square calling onSquareClick-> go to parent (board)-> handleClick
 
@@ -27,9 +26,9 @@ export default function Board() {
 
 
     //3.Connect the onSquareClick prop to a function in the Board component that you’ll name handleClick
-    function handleClick() {
+    function handleClick(i) {
         const nextSquares = squares.slice();
-        nextSquares[0] = "X";
+        nextSquares[i] = "X";
         setSquares(nextSquares);
     }
 
@@ -37,20 +36,21 @@ export default function Board() {
    return (
     <>
       <div className="board-row">
-        <Square value={squares[0]} onSquareClick={handleClick} />
-        <Square value={squares[1]} />
-        <Square value={squares[2]} />
+        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
+        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
+        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
       </div>
       <div className="board-row">
-        <Square value={squares[3]} />
-        <Square value={squares[4]} />
-        <Square value={squares[5]} />
+        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
+        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
+        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
       </div>
       <div className="board-row">
-        <Square value={squares[6]} />
-        <Square value={squares[7]} />
-        <Square value={squares[8]} />
+        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
+        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
+        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
       </div>
+  
     </>
   );
 }
